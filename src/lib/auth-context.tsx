@@ -1,12 +1,16 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from './firebase';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { 
+  signInWithEmailAndPassword, signOut, onAuthStateChanged, 
+  signInWithPopup, GoogleAuthProvider, User 
+} from 'firebase/auth';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   logOut: () => Promise<void>;
 }
 
@@ -14,6 +18,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signIn: async () => {},
+  signInWithGoogle: async () => {},
   logOut: async () => {},
 });
 
@@ -30,11 +35,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    // Authenticate against the shared Firebase Auth project only. The caller's
-    // admin role is verified from Firestore `users/{uid}.role` (see AdminGuard).
-    // Accounts are NEVER created from the portal, so random visitors cannot
-    // self-promote to admin.
     await signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ login_hint: 'shuklarohan388@gmail.com' });
+    await signInWithPopup(auth, provider);
   };
 
   const logOut = async () => {
@@ -43,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, logOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signInWithGoogle, logOut }}>
       {children}
     </AuthContext.Provider>
   );
