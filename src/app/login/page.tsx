@@ -44,7 +44,7 @@ export default function LoginPage() {
       <div style={{
         position: 'fixed', top: '-200px', left: '50%', transform: 'translateX(-50%)',
         width: '600px', height: '600px',
-        background: 'radial-gradient(circle, rgba(212,168,67,0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255,152,0,0.10) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
 
@@ -53,10 +53,10 @@ export default function LoginPage() {
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '20px',
-            background: 'linear-gradient(135deg, #D4A843, #B8860B)',
+            background: 'linear-gradient(135deg, #FF9800, #E65100)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 16px', fontSize: '28px',
-            boxShadow: '0 8px 32px rgba(212,168,67,0.3)'
+            boxShadow: '0 8px 32px rgba(255,152,0,0.3)'
           }}>🛕</div>
           <h1 style={{ fontSize: '1.8rem', fontWeight: '900', letterSpacing: '2px', color: 'var(--primary)', marginBottom: '6px' }}>
             MITSADHANA
@@ -68,7 +68,7 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="card glass" style={{ padding: '40px' }}>
-          <h2 style={{ fontSize: '1.2rem', marginBottom: '6px', color: 'white' }}>Welcome back</h2>
+          <h2 style={{ fontSize: '1.2rem', marginBottom: '6px', color: '#18181B' }}>Welcome back</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '30px' }}>
             Sign in with your admin credentials to continue.
           </p>
@@ -79,8 +79,8 @@ export default function LoginPage() {
               <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '1px', display: 'block', marginBottom: '8px' }}>
                 EMAIL ADDRESS
               </label>
-              <div className="glass" style={{ display: 'flex', alignItems: 'center', padding: '0 16px', borderRadius: '10px', border: '1px solid var(--border)' }}>
-                <Mail size={16} color="var(--text-muted)" style={{ marginRight: '12px', flexShrink: 0 }} />
+              <div style={{ display: 'flex', alignItems: 'center', padding: '0 16px', borderRadius: '10px', border: '1px solid #E4E4E7', backgroundColor: '#F9FAFB' }}>
+                <Mail size={16} color="#71717A" style={{ marginRight: '12px', flexShrink: 0 }} />
                 <input
                   type="email"
                   placeholder="admin@mitsadhana.com"
@@ -89,7 +89,7 @@ export default function LoginPage() {
                   autoComplete="email"
                   style={{
                     flex: 1, padding: '14px 0', background: 'transparent',
-                    border: 'none', color: 'white', fontSize: '0.9rem', outline: 'none'
+                    border: 'none', color: '#18181B', fontSize: '0.9rem', outline: 'none'
                   }}
                 />
               </div>
@@ -100,8 +100,8 @@ export default function LoginPage() {
               <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '1px', display: 'block', marginBottom: '8px' }}>
                 PASSWORD
               </label>
-              <div className="glass" style={{ display: 'flex', alignItems: 'center', padding: '0 16px', borderRadius: '10px', border: '1px solid var(--border)' }}>
-                <Lock size={16} color="var(--text-muted)" style={{ marginRight: '12px', flexShrink: 0 }} />
+              <div style={{ display: 'flex', alignItems: 'center', padding: '0 16px', borderRadius: '10px', border: '1px solid #E4E4E7', backgroundColor: '#F9FAFB' }}>
+                <Lock size={16} color="#71717A" style={{ marginRight: '12px', flexShrink: 0 }} />
                 <input
                   type={showPass ? 'text' : 'password'}
                   placeholder="••••••••••"
@@ -110,13 +110,13 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   style={{
                     flex: 1, padding: '14px 0', background: 'transparent',
-                    border: 'none', color: 'white', fontSize: '0.9rem', outline: 'none'
+                    border: 'none', color: '#18181B', fontSize: '0.9rem', outline: 'none'
                   }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px' }}
+                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#71717A', padding: '4px' }}
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
