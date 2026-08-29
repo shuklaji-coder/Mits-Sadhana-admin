@@ -33,7 +33,7 @@ export default function Dashboard() {
     async function fetchData() {
       // Verify admin role in Firestore first
       try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userDoc = await getDoc(doc(db, 'users', user!.uid));
         if (!userDoc.exists() || userDoc.data()?.role !== 'admin') {
           setPermError(true);
           setLoading(false);
@@ -45,86 +45,86 @@ export default function Dashboard() {
         return;
       }
 
-      try {
-        const usersSnap = await getDocs(collection(db, 'users'));
-        const panditsSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'pandit'), where('verified', '==', true)));
-        const malisSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'mali'), where('verified', '==', true)));
-        const pendingSnap = await getDocs(collection(db, 'admin_notifications'));
-        const bookingsSnap = await getDocs(collection(db, 'pandit-bookings'));
+      // Fetch each collection independently — if one fails, others still load
+      const safeGet = async (q: any) => { try { return await getDocs(q); } catch { return { docs: [], size: 0 }; } };
 
-        const expressSnap = await getDocs(query(collection(db, 'orders'), where('orderType', '==', 'express')));
-        const todayDateString = new Date().toDateString();
-        const expressOrdersToday = expressSnap.docs.filter(doc => {
-          const data = doc.data();
-          if (!data.createdAt) return false;
-          const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          return new Date(d).toDateString() === todayDateString;
-        }).length;
+      const [usersSnap, panditsSnap, malisSnap, pendingSnap, bookingsSnap, expressSnap, subsSnap] = await Promise.all([
+        safeGet(collection(db, 'users')),
+        safeGet(query(collection(db, 'users'), where('role', '==', 'pandit'), where('verified', '==', true))),
+        safeGet(query(collection(db, 'users'), where('role', '==', 'mali'), where('verified', '==', true))),
+        safeGet(collection(db, 'admin_notifications')),
+        safeGet(collection(db, 'pandit-bookings')),
+        safeGet(query(collection(db, 'orders'), where('orderType', '==', 'express'))),
+        safeGet(collection(db, 'subscriptions')),
+      ]);
 
-        setStats({
-          totalUsers: usersSnap.size,
-          activePandits: panditsSnap.size,
-          activeMalis: malisSnap.size,
-          pendingVerifications: pendingSnap.size,
-          totalBookings: bookingsSnap.size,
-          expressOrdersToday
-        });
+      const todayDateString = new Date().toDateString();
+      const expressOrdersToday = (expressSnap as any).docs.filter((doc: any) => {
+        const data = doc.data();
+        if (!data.createdAt) return false;
+        const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+        return new Date(d).toDateString() === todayDateString;
+      }).length;
 
-        setDistributionData([
-          { name: 'Devotees', value: Math.max(0, usersSnap.size - panditsSnap.size - malisSnap.size) },
-          { name: 'Pandits', value: panditsSnap.size },
-          { name: 'Vendors', value: malisSnap.size },
-        ]);
+      setStats({
+        totalUsers: usersSnap.size,
+        activePandits: panditsSnap.size,
+        activeMalis: malisSnap.size,
+        pendingVerifications: pendingSnap.size,
+        totalBookings: bookingsSnap.size,
+        expressOrdersToday
+      });
 
-        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        const dayCounts: Record<string, { users: number; bookings: number }> = {};
-        dayNames.forEach(d => { dayCounts[d] = { users: 0, bookings: 0 }; });
+      setDistributionData([
+        { name: 'Devotees', value: Math.max(0, usersSnap.size - panditsSnap.size - malisSnap.size) },
+        { name: 'Pandits', value: panditsSnap.size },
+        { name: 'Vendors', value: malisSnap.size },
+      ]);
 
-        usersSnap.docs.forEach(d => {
-          const createdAt = d.data().createdAt;
-          let dateObj: Date | null = null;
-          if (createdAt?.toDate) dateObj = createdAt.toDate();
-          else if (typeof createdAt === 'string') {
-            const [dd, m, y] = createdAt.split('/').map(Number);
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayCounts: Record<string, { users: number; bookings: number }> = {};
+      dayNames.forEach(d => { dayCounts[d] = { users: 0, bookings: 0 }; });
+
+      (usersSnap as any).docs.forEach((d: any) => {
+        const createdAt = d.data().createdAt;
+        let dateObj: Date | null = null;
+        if (createdAt?.toDate) dateObj = createdAt.toDate();
+        else if (typeof createdAt === 'string') {
+          const [dd, m, y] = createdAt.split('/').map(Number);
+          dateObj = new Date(y, m - 1, dd);
+        }
+        if (dateObj && !isNaN(dateObj.getTime())) {
+          const day = dayNames[dateObj.getDay()];
+          if (dayCounts[day]) dayCounts[day].users += 1;
+        }
+      });
+
+      (bookingsSnap as any).docs.forEach((d: any) => {
+        const date = d.data().date || d.data().createdAt;
+        let dateObj: Date | null = null;
+        if (date?.toDate) dateObj = date.toDate();
+        else if (typeof date === 'string') {
+          const parts = date.split('/');
+          if (parts.length === 3) {
+            const [dd, m, y] = parts.map(Number);
             dateObj = new Date(y, m - 1, dd);
           }
-          if (dateObj && !isNaN(dateObj.getTime())) {
-            const day = dayNames[dateObj.getDay()];
-            if (dayCounts[day]) dayCounts[day].users += 1;
-          }
-        });
+        }
+        if (dateObj && !isNaN(dateObj.getTime())) {
+          const day = dayNames[dateObj.getDay()];
+          if (dayCounts[day]) dayCounts[day].bookings += 1;
+        }
+      });
+      setGrowthData(dayNames.map(d => ({ name: d, users: dayCounts[d].users, bookings: dayCounts[d].bookings })));
 
-        bookingsSnap.docs.forEach(d => {
-          const date = d.data().date || d.data().createdAt;
-          let dateObj: Date | null = null;
-          if (date?.toDate) dateObj = date.toDate();
-          else if (typeof date === 'string') {
-            const parts = date.split('/');
-            if (parts.length === 3) {
-              const [dd, m, y] = parts.map(Number);
-              dateObj = new Date(y, m - 1, dd);
-            }
-          }
-          if (dateObj && !isNaN(dateObj.getTime())) {
-            const day = dayNames[dateObj.getDay()];
-            if (dayCounts[day]) dayCounts[day].bookings += 1;
-          }
-        });
-        setGrowthData(dayNames.map(d => ({ name: d, users: dayCounts[d].users, bookings: dayCounts[d].bookings })));
+      const planCounts: Record<string, number> = {};
+      (subsSnap as any).docs.forEach((d: any) => {
+        const plan = d.data().planName || 'Other';
+        planCounts[plan] = (planCounts[plan] || 0) + 1;
+      });
+      setSubscriptionPieData(Object.entries(planCounts).map(([name, value]) => ({ name, value })));
 
-        const subsSnap = await getDocs(collection(db, 'subscriptions'));
-        const planCounts: Record<string, number> = {};
-        subsSnap.docs.forEach(d => {
-          const plan = d.data().planName || 'Other';
-          planCounts[plan] = (planCounts[plan] || 0) + 1;
-        });
-        setSubscriptionPieData(Object.entries(planCounts).map(([name, value]) => ({ name, value })));
-
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
+      setLoading(false);
     }
 
     fetchData();
