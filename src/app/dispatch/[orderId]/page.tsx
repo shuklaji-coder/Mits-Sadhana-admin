@@ -64,8 +64,9 @@ export default function DispatchPortal() {
   };
 
   const openInMaps = () => {
-    if (!order?.deliveryAddress) return;
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.deliveryAddress)}`;
+    const addr = order?.deliveryAddress || order?.userAddress || order?.userDetails?.address;
+    if (!addr) return;
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr)}`;
     window.open(url, '_blank');
   };
 
@@ -101,7 +102,7 @@ export default function DispatchPortal() {
           <MapPin size={18} color="#D4A843" />
           <h3 style={{ fontSize: '1rem', color: '#D4A843' }}>Delivery Address</h3>
         </div>
-        <p style={{ fontSize: '1rem', lineHeight: '1.5',  marginBottom: '20px' }}>{order.deliveryAddress}</p>
+        <p style={{ fontSize: '1rem', lineHeight: '1.5',  marginBottom: '20px' }}>{order.deliveryAddress || order.userAddress || order.userDetails?.address}</p>
         
         <button 
           onClick={openInMaps}

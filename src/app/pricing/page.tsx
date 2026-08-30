@@ -123,18 +123,23 @@ function ZoneModal({ zone, onClose, onSaved }: { zone: Partial<PincodeZone> | nu
         updatedBy: 'admin',
       }, { merge: true });
 
-      // Audit log
+      // Audit log — shared 'priceAudit' collection (synced with the mobile app schema)
       if (oldSnap.exists()) {
         const old = oldSnap.data();
-        const changes: string[] = [];
-        if (old.subscriptionPrices?.s1 !== form.subscriptionPrices?.s1) changes.push(`s1: ₹${old.subscriptionPrices?.s1} → ₹${form.subscriptionPrices?.s1}`);
-        if (old.priceMultiplier !== form.priceMultiplier) changes.push(`multiplier: ${old.priceMultiplier} → ${form.priceMultiplier}`);
-        if (changes.length > 0) {
-          await addDoc(collection(db, 'priceChangeLogs'), {
+        const changedFields: Record<string, { old: any; new: any }> = {};
+        for (const key of ['subscriptionPrices', 'priceMultiplier', 'deliveryCharge', 'expressCharge', 'procurementCost', 'sellingPrice', 'isServiceable']) {
+          const oldVal = old[key];
+          const newVal = (form as any)[key];
+          if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) changedFields[key] = { old: oldVal, new: newVal };
+        }
+        if (Object.keys(changedFields).length > 0) {
+          await addDoc(collection(db, 'priceAudit'), {
             pincode: form.pincode,
-            changes,
+            action: 'updated',
+            changedFields,
+            timestamp: serverTimestamp(),
             changedBy: 'admin',
-            changedAt: serverTimestamp(),
+            changedByName: 'Admin',
           });
         }
       }

@@ -10,7 +10,9 @@ interface ExpressOrder {
   userPhone: string;
   items: any[];
   totalAmount: number;
-  deliveryAddress: string;
+  deliveryAddress?: string;
+  userAddress?: string;
+  userDetails?: { address?: string };
   deliveryInstructions?: string;
   status: 'pending' | 'confirmed' | 'dispatched' | 'delivered' | 'cancelled';
   createdAt: any;
@@ -200,7 +202,7 @@ export default function ExpressOrders() {
                     <h4 style={{ fontSize: '0.9rem' }}>Full Delivery Address</h4>
                   </div>
                   <p style={{ color: '#E6EFEA', fontSize: '0.85rem', lineHeight: '1.5' }}>
-                    {order.deliveryAddress || 'No address provided'}
+                    {order.deliveryAddress || order.userAddress || order.userDetails?.address || 'No address provided'}
                   </p>
                   {order.deliveryInstructions && (
                     <p style={{ color: '#FACC15', fontSize: '0.8rem', marginTop: '10px', fontStyle: 'italic' }}>
@@ -217,8 +219,8 @@ export default function ExpressOrders() {
                   <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'grid', gap: '8px' }}>
                     {order.items?.map((item: any, i: number) => (
                       <li key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                        <span style={{ color: '#AABBB0', flex: 1 }}>{item.quantity}x {item.title || item.name}</span>
-                        <span style={{ color: '#E6EFEA', fontWeight: 'bold' }}>₹{item.price * item.quantity}</span>
+                        <span style={{ color: '#AABBB0', flex: 1 }}>{(item.quantity ?? item.qty ?? 1)}x {item.title || item.name}</span>
+                        <span style={{ color: '#E6EFEA', fontWeight: 'bold' }}>₹{(item.price * (item.quantity ?? item.qty ?? 1))}</span>
                       </li>
                     ))}
                   </ul>
