@@ -53,12 +53,14 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
         gap: '16px'
       }}>
         <div style={{
-          width: '48px', height: '48px', borderRadius: '14px',
-          background: 'linear-gradient(135deg, #D4A843, #B8860B)',
+          width: '54px', height: '54px', borderRadius: '16px',
+          background: 'linear-gradient(135deg, #02241C 0%, #064032 50%, #047857 100%)',
+          border: '1.5px solid #D4AF37',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '24px', animation: 'pulse 1.5s ease-in-out infinite'
-        }}>🛕</div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', letterSpacing: '2px' }}>LOADING PORTAL...</p>
+          fontSize: '26px', animation: 'pulse 1.5s ease-in-out infinite',
+          boxShadow: '0 8px 24px rgba(4, 120, 87, 0.28)'
+        }}>🪔</div>
+        <p style={{ color: '#064032', fontSize: '0.8rem', letterSpacing: '2px', fontWeight: '800' }}>VERIFYING ROYAL SACRED ACCESS...</p>
         <style>{`
           @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.95)} }
         `}</style>

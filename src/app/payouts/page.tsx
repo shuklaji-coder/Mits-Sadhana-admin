@@ -4,7 +4,7 @@ import { db } from '@/lib/firebase';
 import {
   collection, query, onSnapshot, orderBy, doc, updateDoc, addDoc, serverTimestamp, Timestamp, getDocs, where
 } from 'firebase/firestore';
-import { IndianRupee, Clock, CheckCircle2, AlertCircle, Loader2, RefreshCw, Plus } from 'lucide-react';
+import { IndianRupee, Clock, CheckCircle2, AlertCircle, Loader2, RefreshCw, Plus, Download } from 'lucide-react';
 
 interface PayoutRecord {
   id: string;
@@ -145,6 +145,34 @@ export default function PayoutsPage() {
     }
   };
 
+  const handleExportCSV = () => {
+    if (filtered.length === 0) {
+      showToast('⚠️ No payouts to export.');
+      return;
+    }
+    const headers = ['Payout ID', 'Beneficiary Name', 'Role', 'Amount (INR)', 'Status', 'UPI ID / Account', 'Source Details', 'Date'];
+    const rows = filtered.map(p => [
+      `"${p.id}"`,
+      `"${p.professionalName.replace(/"/g, '""')}"`,
+      `"${p.role.toUpperCase()}"`,
+      p.amount,
+      `"${p.status.toUpperCase()}"`,
+      `"${(p.upiId || 'N/A').replace(/"/g, '""')}"`,
+      `"${(p.notes || '').replace(/"/g, '""')}"`,
+      `"${p.requestedAt?.toDate ? p.requestedAt.toDate().toISOString() : new Date().toISOString()}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `mits_payouts_${filter}_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast(`📥 Exported ${filtered.length} payout record(s) to CSV!`);
+  };
+
   const filtered = filter === 'all' ? payouts : payouts.filter(p => p.status === filter);
   const pendingTotal = payouts.filter(p => p.status === 'pending').reduce((a, b) => a + b.amount, 0);
   const paidTotal = payouts.filter(p => p.status === 'completed').reduce((a, b) => a + b.amount, 0);
@@ -169,18 +197,30 @@ export default function PayoutsPage() {
       )}
 
       {/* Header */}
-      <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>Financial Payouts</h1>
           <p style={{ color: 'var(--text-muted)' }}>Manage and audit payments due to Pandits and Vendors.</p>
         </div>
-        <button
-          onClick={() => setShowGenerate(true)}
-          className="btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px' }}
-        >
-          <RefreshCw size={16} /> GENERATE PAYOUTS
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button
+            onClick={handleExportCSV}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 18px',
+              borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid var(--border)',
+              color: 'white', fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer'
+            }}
+          >
+            <Download size={16} /> EXPORT CSV BATCH
+          </button>
+          <button
+            onClick={() => setShowGenerate(true)}
+            className="btn-primary"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px' }}
+          >
+            <RefreshCw size={16} /> GENERATE PAYOUTS
+          </button>
+        </div>
       </div>
 
       {/* Summary Cards */}

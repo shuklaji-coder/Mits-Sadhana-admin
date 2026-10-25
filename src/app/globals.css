@@ -1,19 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --background: #FAFAFA;
-  --foreground: #18181B;
+  /* Surfaces & Canvas */
+  --background: #F7FAF8;
+  --foreground: #0B251C;
   --card-bg: #FFFFFF;
-  --sidebar-bg: #FFFFFF;
-  --primary: #FF9800;
-  --primary-hover: #E65100;
-  --primary-yellow: #F59E0B;
-  --primary-light: #FFF7ED;
-  --border: #E4E4E7;
-  --text-muted: #71717A;
-  --accent: #F4F4F5;
-  --accent-yellow: #FEF3C7;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 14px rgba(255, 152, 0, 0.06), 0 2px 4px rgba(0,0,0,0.02);
-  --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
+  --sidebar-bg: #02241C;
+  --sidebar-surface: #064032;
+  --sidebar-border: rgba(212, 175, 55, 0.22);
+
+  /* Emerald Green Palette (Primary Brand) */
+  --emerald-950: #02241C;
+  --emerald-900: #064032;
+  --emerald-800: #065F46;
+  --emerald-700: #047857;
+  --emerald-600: #059669;
+  --emerald-500: #10B981;
+  --emerald-100: #D1FAE5;
+  --emerald-50: #ECFDF5;
+
+  /* Aliases for backwards compatibility */
+  --primary: #047857;
+  --primary-hover: #064032;
+  --primary-light: #ECFDF5;
+  --primary-surface: #F0FDF4;
+
+  /* Champagne Gold Palette (Royal Accent) */
+  --champagne-gold: #D4AF37;
+  --champagne-gold-light: #F7EFCF;
+  --champagne-gold-deep: #A07828;
+  --champagne-50: #FCF9F1;
+  --champagne-100: #F7EFCF;
+  --primary-yellow: #D4AF37;
+  --accent-yellow: #F7EFCF;
+  --accent: #E6F4ED;
+
+  /* Borders & Dividers */
+  --border: #DFEAE3;
+  --border-gold: rgba(212, 175, 55, 0.28);
+  --border-emerald: rgba(4, 120, 87, 0.22);
+  --text-muted: #53695E;
+  --text-dim: #7B9185;
+
+  /* Ambient Glows & Shadows */
+  --shadow-sm: 0 1px 3px rgba(6, 78, 59, 0.05);
+  --shadow-md: 0 4px 18px rgba(6, 78, 59, 0.07), 0 2px 6px rgba(212, 175, 55, 0.05);
+  --shadow-lg: 0 14px 40px rgba(6, 78, 59, 0.12), 0 4px 12px rgba(212, 175, 55, 0.08);
+  --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.25);
+  --shadow-emerald: 0 4px 20px rgba(4, 120, 87, 0.28);
 }
 
 * {
@@ -25,13 +59,14 @@
 html, body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
   color: var(--foreground);
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 a {
@@ -39,30 +74,82 @@ a {
   text-decoration: none;
 }
 
-/* Custom Utilities */
+/* ── Custom Luxury Utilities ── */
 .glass {
-  background: #FFFFFF;
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-gold);
   border-radius: 16px;
   box-shadow: var(--shadow-md);
 }
 
+.glass-emerald {
+  background: linear-gradient(135deg, rgba(2, 36, 28, 0.96) 0%, rgba(6, 64, 50, 0.94) 100%);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #FFFFFF;
+}
+
 .btn-primary {
-  background: linear-gradient(135deg, #FF9800 0%, #E65100 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 50%, #064032 100%);
   color: #FFFFFF;
   padding: 10px 22px;
   border-radius: 10px;
   font-weight: 700;
   font-size: 0.9rem;
-  border: none;
+  border: 1px solid rgba(212, 175, 55, 0.35);
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(255, 152, 0, 0.3);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(4, 120, 87, 0.32);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(4, 120, 87, 0.45);
+  border-color: rgba(212, 175, 55, 0.65);
+}
+
+.btn-champagne {
+  background: linear-gradient(135deg, #F5E8BE 0%, #D4AF37 50%, #AA822A 100%);
+  color: #02241C;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-champagne:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(212, 175, 55, 0.5);
+  filter: brightness(1.06);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: #D4AF37;
+  border: 1.5px solid #D4AF37;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-gold:hover {
+  background: rgba(212, 175, 55, 0.12);
 }
 
 .card {
@@ -71,11 +158,41 @@ a {
   border-radius: 18px;
   padding: 24px;
   box-shadow: var(--shadow-md);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .card:hover {
   box-shadow: var(--shadow-lg);
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+/* Badges */
+.badge-emerald {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid rgba(4, 120, 87, 0.25);
+}
+
+.badge-champagne {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: #FCF9F1;
+  color: #9A7424;
+  border: 1px solid rgba(212, 175, 55, 0.35);
 }
 
 /* Responsive Table Wrapper */
@@ -85,19 +202,18 @@ a {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Scrollbars */
+/* Scrollbars: Emerald & Champagne Accents */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(6, 64, 50, 0.05);
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #A7D0B8;
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #047857;
 }
-
