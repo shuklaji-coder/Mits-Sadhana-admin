@@ -151,8 +151,8 @@ export default function SupportDesk() {
                     <MessageSquare size={20} color="var(--primary)" />
                   </div>
                   <div>
-                    <h4 style={{ color: 'white', marginBottom: '4px', fontSize: '1rem' }}>{tk.issue}</h4>
-                    <p style={{ fontSize: '0.9rem', color: '#E6EFEA', marginBottom: '8px', lineHeight: '1.4' }}>{tk.description || 'No additional details provided.'}</p>
+                    <h4 style={{ color: '#0B251C', marginBottom: '4px', fontSize: '1rem', fontWeight: '800' }}>{tk.issue}</h4>
+                    <p style={{ fontSize: '0.9rem', color: '#0B251C', marginBottom: '8px', lineHeight: '1.4' }}>{tk.description || 'No additional details provided.'}</p>
                     <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)' }}>
                         <User size={14} />

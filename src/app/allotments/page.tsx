@@ -108,7 +108,7 @@ export default function Allotments() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{flex: 2}}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                    <h3 style={{ margin: 0, color: 'white' }}>{sub.planName}</h3>
+                    <h3 style={{ margin: 0, color: '#0B251C' }}>{sub.planName}</h3>
                     <span style={{ fontSize: '0.6rem', backgroundColor: 'rgba(212,168,67,0.1)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '4px' }}>
                         ID: {sub.id.slice(-6).toUpperCase()}
                     </span>
@@ -129,9 +129,9 @@ export default function Allotments() {
                     style={{ 
                         width: '100%', 
                         padding: '10px', 
-                        backgroundColor: '#112219', 
-                        border: '1px solid var(--border)', 
-                        color: 'white',
+                        backgroundColor: '#F7FAF8', 
+                        border: '1px solid #DFEAE3', 
+                        color: '#0B251C',
                         borderRadius: '8px',
                         marginBottom: '10px'
                     }}

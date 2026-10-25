@@ -157,24 +157,24 @@ export default function OrdersHub() {
                                 {order.type === 'puja' ? <Star size={18} color="#D4A843" /> : order.type === 'express' ? <Zap size={18} color="#60A5FA" /> : <ShoppingBag size={18} color="#8CA193" />}
                             </div>
                             <div>
-                                <h4 style={{ color: 'white', fontSize: '0.95rem' }}>{order.customerName}</h4>
+                                <h4 style={{ color: '#0B251C', fontSize: '0.95rem', fontWeight: '800' }}>{order.customerName}</h4>
                                 <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{order.type.toUpperCase()} • ID: {order.id.slice(-6)}</p>
                             </div>
                         </div>
 
                         <div style={{ flex: 1 }}>
-                            <p style={{ fontSize: '0.85rem', color: order.professionalName ? 'white' : 'var(--text-muted)' }}>
+                            <p style={{ fontSize: '0.85rem', color: order.professionalName ? '#0B251C' : 'var(--text-muted)' }}>
                                 {order.professionalName || 'Manual Allotment Pending'}
                             </p>
                         </div>
 
                         <div style={{ flex: 1 }}>
-                            <p style={{ fontSize: '0.85rem', color: 'white' }}>📍 {order.pincode}</p>
+                            <p style={{ fontSize: '0.85rem', color: '#0B251C', fontWeight: '600' }}>📍 {order.pincode}</p>
                             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{formatDate(order.date)}</p>
                         </div>
 
                         <div style={{ flex: 1, textAlign: 'right' }}>
-                            <h4 style={{ color: 'white', marginBottom: '4px' }}>₹{order.amount}</h4>
+                            <h4 style={{ color: '#0B251C', marginBottom: '4px', fontWeight: '800' }}>₹{order.amount}</h4>
                             <span style={{ 
                                 fontSize: '0.65rem', 
                                 fontWeight: 'bold', 

@@ -112,7 +112,7 @@ export default function RevenueDashboard() {
               <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '1px' }}>{card.label}</span>
               <card.icon size={16} color={card.color} />
             </div>
-            <h2 style={{ fontSize: '1.8rem', color: 'white' }}>₹{card.value.toLocaleString()}</h2>
+            <h2 style={{ fontSize: '1.8rem', color: '#0B251C', fontWeight: '900' }}>₹{card.value.toLocaleString()}</h2>
           </div>
         ))}
       </div>
@@ -161,7 +161,7 @@ export default function RevenueDashboard() {
             ].map(item => (
               <div key={item.label}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem' }}>
-                  <span style={{ color: 'white' }}>{item.label}</span>
+                  <span style={{ color: '#0B251C', fontWeight: '600' }}>{item.label}</span>
                   <span style={{ color: 'var(--primary)' }}>{item.p}</span>
                 </div>
                 <div style={{ height: '6px', backgroundColor: '#070C09', borderRadius: '3px', overflow: 'hidden' }}>
@@ -171,9 +171,9 @@ export default function RevenueDashboard() {
             ))}
           </div>
 
-          <div style={{ marginTop: '40px', padding: '20px', borderRadius: '12px', background: 'rgba(212,168,67,0.05)', border: '1px solid rgba(212,168,67,0.1)' }}>
+          <div style={{ marginTop: '40px', padding: '20px', borderRadius: '12px', background: '#FCF9F1', border: '1px solid rgba(212,168,67,0.3)' }}>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-              💡 <strong style={{ color: 'white' }}>Optimization Tip:</strong> Current payout ratio is high. Consider renegotiating vendor contracts or increasing premium service fees to improve net profit margins.
+              💡 <strong style={{ color: '#0B251C' }}>Optimization Tip:</strong> Current payout ratio is high. Consider renegotiating vendor contracts or increasing premium service fees to improve net profit margins.
             </p>
           </div>
         </div>

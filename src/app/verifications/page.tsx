@@ -288,9 +288,9 @@ const VerificationCard = ({ req, handleApprove, handleReject, openReview }: { re
           }}>
             {req.type.replace(/_/g, ' ')}
           </span>
-          <h3 style={{ marginBottom: '8px', color: 'white' }}>{req.panditName || req.maliName} {userProfile?.name ? `(${userProfile.name})` : ''}</h3>
+          <h3 style={{ marginBottom: '8px', color: '#0B251C' }}>{req.panditName || req.maliName} {userProfile?.name ? `(${userProfile.name})` : ''}</h3>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px', backgroundColor: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px', backgroundColor: '#F7FAF8', border: '1px solid #DFEAE3', padding: '15px', borderRadius: '10px' }}>
              {userProfile?.phone && (
                <div>
                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '2px' }}>PHONE</p>
@@ -300,22 +300,22 @@ const VerificationCard = ({ req, handleApprove, handleReject, openReview }: { re
              {userProfile?.email && (
                <div>
                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '2px' }}>EMAIL</p>
-                   <p style={{ color: '#E6EFEA', fontSize: '0.9rem' }}>{userProfile.email}</p>
+                   <p style={{ color: '#0B251C', fontSize: '0.9rem', fontWeight: '600' }}>{userProfile.email}</p>
                </div>
              )}
              {req.shopName && (
                <div>
                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '2px' }}>SHOP / EXPERTISE</p>
-                   <p style={{ color: '#E6EFEA', fontSize: '0.9rem' }}>{req.shopName}</p>
+                   <p style={{ color: '#0B251C', fontSize: '0.9rem', fontWeight: '600' }}>{req.shopName}</p>
                </div>
              )}
              <div>
                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '2px' }}>ADDRESS / AREA</p>
-                 <p style={{ color: '#E6EFEA', fontSize: '0.9rem' }}>{userProfile?.address || req.pincode || 'Not Specified'}</p>
+                 <p style={{ color: '#0B251C', fontSize: '0.9rem', fontWeight: '600' }}>{userProfile?.address || req.pincode || 'Not Specified'}</p>
              </div>
           </div>
           
-          <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: '#8CA193' }}>💬 "{req.message}"</p>
+          <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: '#53695E' }}>💬 "{req.message}"</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '30px', minWidth: '130px' }}>
           <button className="btn-primary" style={{ backgroundColor: 'rgba(212,168,67,0.1)', color: 'var(--primary)', border: '1px solid var(--primary)', width: '100%' }} onClick={() => openReview(req)}>REVIEW</button>

@@ -288,7 +288,7 @@ export default function PayoutsPage() {
                     {pay.role === 'pandit' ? '🛕' : '🌸'}
                   </div>
                   <div>
-                    <h4 style={{ color: 'white', marginBottom: '4px', fontSize: '1rem' }}>{pay.professionalName}</h4>
+                    <h4 style={{ color: '#0B251C', marginBottom: '4px', fontSize: '1rem', fontWeight: '800' }}>{pay.professionalName}</h4>
                     <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {pay.role.toUpperCase()} • {pay.notes || `ID: ${pay.professionalId?.slice(-6)}`}
                     </p>
@@ -301,7 +301,7 @@ export default function PayoutsPage() {
                 {/* Right: Amount + Actions */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div style={{ textAlign: 'right' }}>
-                    <h3 style={{ color: 'white', fontSize: '1.3rem', marginBottom: '4px' }}>₹{pay.amount.toLocaleString()}</h3>
+                    <h3 style={{ color: '#0B251C', fontSize: '1.3rem', marginBottom: '4px', fontWeight: '800' }}>₹{pay.amount.toLocaleString()}</h3>
                     <span style={{
                       fontSize: '0.65rem', fontWeight: 'bold',
                       color: statusColor(pay.status), textTransform: 'uppercase'

@@ -125,7 +125,7 @@ export default function EcoPickupsPage() {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                       <User size={16} color="var(--primary)" />
-                      <h4 style={{ color: 'white', fontSize: '1.1rem' }}>{p.userDetails.name}</h4>
+                      <h4 style={{ color: '#0B251C', fontSize: '1.1rem', fontWeight: '800' }}>{p.userDetails.name}</h4>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px' }}>
                       <MapPin size={16} style={{ marginTop: '2px' }} />
@@ -145,9 +145,9 @@ export default function EcoPickupsPage() {
                   <div style={{ flex: 1, borderLeft: '1px solid var(--border)', paddingLeft: '24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                       <Recycle size={16} color="var(--primary)" />
-                      <h4 style={{ color: 'white', fontSize: '1rem' }}>Contents</h4>
+                      <h4 style={{ color: '#0B251C', fontSize: '1rem', fontWeight: '800' }}>Contents</h4>
                     </div>
-                    <p style={{ fontSize: '0.9rem', color: '#E6EFEA', marginBottom: '12px' }}>{p.pickupDetails.items}</p>
+                    <p style={{ fontSize: '0.9rem', color: '#0B251C', marginBottom: '12px', fontWeight: '500' }}>{p.pickupDetails.items}</p>
                     <div style={{ display: 'flex', gap: '15px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                         <Calendar size={14} />

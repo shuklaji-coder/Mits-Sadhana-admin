@@ -195,13 +195,13 @@ export default function ExpressOrders() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '30px', backgroundColor: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '12px' }}>
+              <div style={{ display: 'flex', gap: '30px', backgroundColor: '#F7FAF8', border: '1px solid #DFEAE3', padding: '20px', borderRadius: '12px' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
                     <MapPin size={16} color="var(--primary)" />
                     <h4 style={{ fontSize: '0.9rem' }}>Full Delivery Address</h4>
                   </div>
-                  <p style={{ color: '#E6EFEA', fontSize: '0.85rem', lineHeight: '1.5' }}>
+                  <p style={{ color: '#0B251C', fontSize: '0.88rem', lineHeight: '1.5', fontWeight: '600' }}>
                     {order.deliveryAddress || order.userAddress || order.userDetails?.address || 'No address provided'}
                   </p>
                   {order.deliveryInstructions && (
@@ -211,7 +211,7 @@ export default function ExpressOrders() {
                   )}
                 </div>
 
-                <div style={{ flex: 1, borderLeft: '1px solid rgba(255,255,255,0.05)', paddingLeft: '30px' }}>
+                <div style={{ flex: 1, borderLeft: '1px solid #DFEAE3', paddingLeft: '30px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
                     <ShoppingCart size={16} color="var(--primary)" />
                     <h4 style={{ fontSize: '0.9rem' }}>Items Ordered ({order.items?.length || 0})</h4>
@@ -219,8 +219,8 @@ export default function ExpressOrders() {
                   <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'grid', gap: '8px' }}>
                     {order.items?.map((item: any, i: number) => (
                       <li key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                        <span style={{ color: '#AABBB0', flex: 1 }}>{(item.quantity ?? item.qty ?? 1)}x {item.title || item.name}</span>
-                        <span style={{ color: '#E6EFEA', fontWeight: 'bold' }}>₹{(item.price * (item.quantity ?? item.qty ?? 1))}</span>
+                        <span style={{ color: '#53695E', flex: 1 }}>{(item.quantity ?? item.qty ?? 1)}x {item.title || item.name}</span>
+                        <span style={{ color: '#0B251C', fontWeight: 'bold' }}>₹{(item.price * (item.quantity ?? item.qty ?? 1))}</span>
                       </li>
                     ))}
                   </ul>

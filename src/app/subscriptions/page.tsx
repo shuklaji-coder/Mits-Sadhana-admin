@@ -161,7 +161,7 @@ export default function SubscriptionsPage() {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             className="glass"
-            style={{ width: '100%', padding: '16px 16px 16px 45px', borderRadius: '15px', color: 'white', outline: 'none' }}
+            style={{ width: '100%', padding: '16px 16px 16px 45px', borderRadius: '15px', color: '#0B251C', outline: 'none' }}
           />
         </div>
         <div style={{ display: 'flex', gap: '8px', backgroundColor: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '15px', border: '1px solid var(--border)' }}>
@@ -211,10 +211,10 @@ export default function SubscriptionsPage() {
                             </span>
                         </div>
 
-                        <h3 style={{ fontSize: '1.6rem', color: 'white', marginBottom: '15px', fontWeight: '800' }}>{sub.userName}</h3>
+                        <h3 style={{ fontSize: '1.6rem', color: '#0B251C', marginBottom: '15px', fontWeight: '800' }}>{sub.userName}</h3>
                         
-                        <div style={{ backgroundColor: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '15px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                            <p style={{ display: 'flex', gap: '10px', color: '#E6EFEA', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                        <div style={{ backgroundColor: '#F7FAF8', padding: '15px', borderRadius: '15px', marginBottom: '20px', border: '1px solid #DFEAE3' }}>
+                            <p style={{ display: 'flex', gap: '10px', color: '#0B251C', fontSize: '0.92rem', lineHeight: '1.5', fontWeight: '600' }}>
                                 <MapPin size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
                                 <span>{sub.userAddress || (sub as any).deliveryAddress || sub.address || sub.userDetails?.address || 'Address details pending...'}</span>
                             </p>
@@ -222,22 +222,22 @@ export default function SubscriptionsPage() {
 
                         <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                                <User size={16} /> <strong>{sub.userPhone}</strong>
+                                <User size={16} /> <strong style={{ color: '#0B251C' }}>{sub.userPhone}</strong>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                                <Map size={16} /> Area: <strong>{sub.pincode}</strong>
+                                <Map size={16} /> Area: <strong style={{ color: '#0B251C' }}>{sub.pincode}</strong>
                             </div>
                         </div>
                     </div>
 
                     {/* MIDDLE: Timeline */}
-                    <div style={{ flex: 1, borderLeft: '1px solid rgba(255,255,255,0.05)', paddingLeft: '30px' }}>
+                    <div style={{ flex: 1, borderLeft: '1px solid #DFEAE3', paddingLeft: '30px' }}>
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '900', letterSpacing: '1px', marginBottom: '20px' }}>SUBSCRIPTION LIFECYCLE</p>
                         
-                        <div style={{ position: 'relative', paddingLeft: '20px', borderLeft: '2px dashed rgba(212,168,67,0.2)' }}>
+                        <div style={{ position: 'relative', paddingLeft: '20px', borderLeft: '2px dashed rgba(212,168,67,0.45)' }}>
                             <div style={{ marginBottom: '15px' }}>
                                 <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '4px' }}>START DATE</p>
-                                <p style={{ fontWeight: 'bold', color: 'white' }}>{timeline.start}</p>
+                                <p style={{ fontWeight: 'bold', color: '#0B251C' }}>{timeline.start}</p>
                             </div>
                             <div>
                                 <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '4px' }}>RENEWAL DATE</p>
@@ -247,22 +247,22 @@ export default function SubscriptionsPage() {
                             <div style={{ position: 'absolute', top: 0, left: '-6px', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: 'var(--primary)' }} />
                         </div>
 
-                        <div style={{ marginTop: '20px', padding: '10px 15px', borderRadius: '10px', backgroundColor: 'rgba(212,168,67,0.05)', display: 'inline-block' }}>
+                        <div style={{ marginTop: '20px', padding: '10px 15px', borderRadius: '10px', backgroundColor: '#FCF9F1', border: '1px solid rgba(212,168,67,0.3)', display: 'inline-block' }}>
                             <Text style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'bold' }}>⏳ {timeline.daysLeft} Days Remaining</Text>
                         </div>
                     </div>
 
                     {/* RIGHT: Partner Allotment */}
-                    <div style={{ flex: 1.2, borderLeft: '1px solid rgba(255,255,255,0.05)', paddingLeft: '30px', position: 'relative' }}>
+                    <div style={{ flex: 1.2, borderLeft: '1px solid #DFEAE3', paddingLeft: '30px', position: 'relative' }}>
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '900', letterSpacing: '1px', marginBottom: '15px' }}>FULFILLMENT PARTNER</p>
                         
                         {isAllotted ? (
                             <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                <div style={{ width: '45px', height: '45px', borderRadius: '12px', backgroundColor: 'rgba(212,168,67,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
+                                <div style={{ width: '45px', height: '45px', borderRadius: '12px', backgroundColor: '#FCF9F1', border: '1px solid rgba(212,168,67,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
                                     🌸
                                 </div>
                                 <div>
-                                    <h4 style={{ color: 'white', fontSize: '1rem' }}>{sub.maliName}</h4>
+                                    <h4 style={{ color: '#0B251C', fontSize: '1rem', fontWeight: '800' }}>{sub.maliName}</h4>
                                     <p style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>{sub.maliShop || 'Direct Partner'}</p>
                                 </div>
                             </div>
@@ -281,8 +281,8 @@ export default function SubscriptionsPage() {
                                 disabled={appointing === sub.id}
                                 style={{ 
                                     width: '100%', padding: '14px', borderRadius: '15px', 
-                                    backgroundColor: '#020503', border: '1px solid var(--border)', 
-                                    color: 'white', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                                    backgroundColor: '#02241C', border: '1.5px solid rgba(212,168,67,0.35)', 
+                                    color: '#F7EFCF', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                                 }}
                             >
                                 <span style={{ fontSize: '0.85rem' }}>{appointing === sub.id ? 'Appointing...' : (isAllotted ? 'Change Partner' : 'Appoint Partner')}</span>

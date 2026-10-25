@@ -174,7 +174,7 @@ export default function UserDirectory() {
                                 {user.role === 'devotee' ? '🙏' : user.role === 'pandit' ? '🛕' : '🌸'}
                             </div>
                             <div>
-                                <h3 style={{ fontSize: '1.1rem', color: 'white', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <h3 style={{ fontSize: '1.1rem', color: '#0B251C', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                     {user.name || 'Unknown'} 
                                     {user.verified ? <UserCheck size={16} color="#D4A843" /> : <UserX size={16} color="#FF6B6B" />}
                                 </h3>

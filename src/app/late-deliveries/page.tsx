@@ -113,7 +113,7 @@ export default function LateDeliveriesMonitor() {
                       <User size={18} color="var(--primary)" />
                       <div>
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Mali Partner</p>
-                        <p style={{ fontSize: '1rem', fontWeight: 'bold', color: 'white' }}>{alert.maliName}</p>
+                        <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#0B251C' }}>{alert.maliName}</p>
                       </div>
                     </div>
 
@@ -121,7 +121,7 @@ export default function LateDeliveriesMonitor() {
                       <Users size={18} color="var(--primary)" />
                       <div>
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Customer</p>
-                        <p style={{ fontSize: '1rem', fontWeight: 'bold', color: 'white' }}>{alert.customerName}</p>
+                        <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#0B251C' }}>{alert.customerName}</p>
                       </div>
                     </div>
 
@@ -129,7 +129,7 @@ export default function LateDeliveriesMonitor() {
                       <Clock size={18} color="var(--primary)" />
                       <div>
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Schedule vs Actual</p>
-                        <p style={{ fontSize: '0.9rem', color: 'white' }}>
+                        <p style={{ fontSize: '0.9rem', color: '#0B251C' }}>
                           <span style={{ textDecoration: 'line-through', opacity: 0.5 }}>{alert.preferredTime}</span> 
                           {' '}{formatDate(alert.deliveredAt).split(',')[1]}
                         </p>
@@ -140,7 +140,7 @@ export default function LateDeliveriesMonitor() {
                       <MapPin size={18} color="var(--primary)" />
                       <div>
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Location</p>
-                        <p style={{ fontSize: '1rem', fontWeight: 'bold', color: 'white' }}>{alert.pincode}</p>
+                        <p style={{ fontSize: '1rem', fontWeight: 'bold', color: '#0B251C' }}>{alert.pincode}</p>
                       </div>
                     </div>
                   </div>
