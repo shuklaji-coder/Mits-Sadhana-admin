@@ -49,10 +49,22 @@ export default function Dashboard() {
       // Fetch each collection independently — if one fails, others still load
       const safeGet = async (q: any) => { try { return await getDocs(q); } catch { return { docs: [], size: 0 }; } };
 
-      const [usersSnap, panditsSnap, malisSnap, pendingSnap, bookingsSnap, expressSnap, subsSnap] = await Promise.all([
+      const [
+        usersSnap, 
+        panditsSnap, 
+        malisSnap, 
+        pendingPanditsSnap, 
+        pendingMalisSnap, 
+        pendingSnap, 
+        bookingsSnap, 
+        expressSnap, 
+        subsSnap
+      ] = await Promise.all([
         safeGet(collection(db, 'users')),
-        safeGet(query(collection(db, 'users'), where('role', '==', 'pandit'), where('verified', '==', true))),
-        safeGet(query(collection(db, 'users'), where('role', '==', 'mali'), where('verified', '==', true))),
+        safeGet(query(collection(db, 'pandits'), where('verified', '==', true))),
+        safeGet(query(collection(db, 'vendors'), where('verified', '==', true))),
+        safeGet(query(collection(db, 'pandits'), where('verified', '==', false))),
+        safeGet(query(collection(db, 'vendors'), where('verified', '==', false))),
         safeGet(collection(db, 'admin_notifications')),
         safeGet(collection(db, 'pandit-bookings')),
         safeGet(query(collection(db, 'orders'), where('orderType', '==', 'express'))),
@@ -67,19 +79,34 @@ export default function Dashboard() {
         return new Date(d).toDateString() === todayDateString;
       }).length;
 
+      // Unique pending verifications calculation
+      const pendingIds = new Set<string>();
+      (pendingPanditsSnap as any).docs?.forEach((d: any) => pendingIds.add(d.id));
+      (pendingMalisSnap as any).docs?.forEach((d: any) => pendingIds.add(d.id));
+      (pendingSnap as any).docs?.forEach((d: any) => {
+        const id = d.data()?.panditId || d.data()?.maliId || d.id;
+        if (id) pendingIds.add(id);
+      });
+
+      // Active counts (cross-check collections and users)
+      const userPanditsCount = (usersSnap as any).docs?.filter((d: any) => d.data().role === 'pandit' && d.data().verified).length || 0;
+      const userMalisCount = (usersSnap as any).docs?.filter((d: any) => d.data().role === 'mali' && d.data().verified).length || 0;
+      const activePanditsCount = Math.max(panditsSnap.size, userPanditsCount);
+      const activeMalisCount = Math.max(malisSnap.size, userMalisCount);
+
       setStats({
         totalUsers: usersSnap.size,
-        activePandits: panditsSnap.size,
-        activeMalis: malisSnap.size,
-        pendingVerifications: pendingSnap.size,
+        activePandits: activePanditsCount,
+        activeMalis: activeMalisCount,
+        pendingVerifications: pendingIds.size,
         totalBookings: bookingsSnap.size,
         expressOrdersToday
       });
 
       setDistributionData([
-        { name: 'Devotees', value: Math.max(0, usersSnap.size - panditsSnap.size - malisSnap.size) },
-        { name: 'Pandits', value: panditsSnap.size },
-        { name: 'Vendors', value: malisSnap.size },
+        { name: 'Devotees', value: Math.max(0, usersSnap.size - activePanditsCount - activeMalisCount) },
+        { name: 'Pandits', value: activePanditsCount },
+        { name: 'Vendors', value: activeMalisCount },
       ]);
 
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

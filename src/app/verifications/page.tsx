@@ -10,7 +10,8 @@ import {
   deleteDoc, 
   getDoc, 
   addDoc, 
-  serverTimestamp 
+  serverTimestamp,
+  where 
 } from 'firebase/firestore';
 
 interface VerificationRequest {
@@ -34,13 +35,85 @@ export default function Verifications() {
   const [loadingDetails, setLoadingDetails] = useState(false);
 
   useEffect(() => {
-    const q = query(collection(db, 'admin_notifications'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const reqs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VerificationRequest));
-      setRequests(reqs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)));
+    let notifReqs: VerificationRequest[] = [];
+    let panditReqs: VerificationRequest[] = [];
+    let maliReqs: VerificationRequest[] = [];
+
+    const mergeAndSet = () => {
+      const mergedMap = new Map<string, VerificationRequest>();
+
+      // 1. Direct unverified pandits
+      panditReqs.forEach(p => {
+        const key = p.panditId || p.id;
+        mergedMap.set(key, p);
+      });
+
+      // 2. Direct unverified malis/vendors
+      maliReqs.forEach(m => {
+        const key = m.maliId || m.id;
+        mergedMap.set(key, m);
+      });
+
+      // 3. Admin notifications (enrich or add)
+      notifReqs.forEach(n => {
+        const key = n.panditId || n.maliId || n.id;
+        if (!mergedMap.has(key)) {
+          mergedMap.set(key, n);
+        } else {
+          const existing = mergedMap.get(key)!;
+          mergedMap.set(key, { ...existing, ...n, id: n.id });
+        }
+      });
+
+      const list = Array.from(mergedMap.values());
+      list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+      setRequests(list);
       setLoading(false);
-    });
-    return () => unsubscribe();
+    };
+
+    const unsubNotifs = onSnapshot(query(collection(db, 'admin_notifications')), (snapshot) => {
+      notifReqs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as VerificationRequest));
+      mergeAndSet();
+    }, () => mergeAndSet());
+
+    const unsubPandits = onSnapshot(query(collection(db, 'pandits'), where('verified', '==', false)), (snapshot) => {
+      panditReqs = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          type: 'new_pandit_registration',
+          panditId: doc.id,
+          panditName: data.name || 'Vedic Scholar',
+          message: `${data.name || 'Pandit'} applied for Pandit onboarding.`,
+          createdAt: data.lastUpdated || data.createdAt || null,
+          pincode: data.pincode || '',
+        } as VerificationRequest;
+      });
+      mergeAndSet();
+    }, () => mergeAndSet());
+
+    const unsubVendors = onSnapshot(query(collection(db, 'vendors'), where('verified', '==', false)), (snapshot) => {
+      maliReqs = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          type: 'new_mali_registration',
+          maliId: doc.id,
+          maliName: data.name || 'Floral Partner',
+          shopName: data.shopName || '',
+          message: `${data.name || 'Vendor'} registered flower shop "${data.shopName || ''}".`,
+          createdAt: data.updatedAt || data.createdAt || null,
+          pincode: data.pincode || '',
+        } as VerificationRequest;
+      });
+      mergeAndSet();
+    }, () => mergeAndSet());
+
+    return () => {
+      unsubNotifs();
+      unsubPandits();
+      unsubVendors();
+    };
   }, []);
 
   const handleApprove = async (request: VerificationRequest) => {
@@ -77,8 +150,8 @@ export default function Verifications() {
         }).catch(() => {});
       }
 
-      // 4. Delete admin notification
-      await deleteDoc(doc(db, 'admin_notifications', request.id));
+      // 4. Delete admin notification (if exists)
+      await deleteDoc(doc(db, 'admin_notifications', request.id)).catch(() => {});
 
       // 5. Send Approval in-app Notification to partner
       const role = request.type === 'new_mali_registration' ? 'mali' : 'pandit';
@@ -126,7 +199,7 @@ export default function Verifications() {
           createdAt: serverTimestamp()
         });
 
-        await deleteDoc(doc(db, 'admin_notifications', request.id));
+        await deleteDoc(doc(db, 'admin_notifications', request.id)).catch(() => {});
         setSelectedReq(null);
         alert("Application Rejected.");
       } catch (error) {
