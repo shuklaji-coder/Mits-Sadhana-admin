@@ -28,6 +28,12 @@ interface Subscription {
   maliName?: string;
   assignedMaliId?: string;
   maliShop?: string;
+  isPaused?: boolean;
+  subscriptionPausedUntil?: string | null;
+  pauseStartDate?: string;
+  pauseEndDate?: string;
+  pausedDaysCount?: number;
+  endDate?: string;
 }
 
 interface Mali {
@@ -43,7 +49,7 @@ export default function SubscriptionsPage() {
   const [availableMalis, setAvailableMalis] = useState<Mali[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState<'all' | 'pending_allotment' | 'active'>('all');
+  const [filter, setFilter] = useState<'all' | 'pending_allotment' | 'active' | 'vacation'>('all');
   const [appointing, setAppointing] = useState<string | null>(null);
   
   // Custom Selection State
@@ -105,10 +111,10 @@ export default function SubscriptionsPage() {
     }
   };
 
-  const getTimeline = (createdAt: any) => {
-    if (!createdAt) return { start: 'N/A', end: 'N/A', daysLeft: 0 };
-    const start = createdAt.toDate ? createdAt.toDate() : new Date(createdAt);
-    const end = new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
+  const getTimeline = (sub: Subscription) => {
+    const createdAt = sub.createdAt;
+    const start = createdAt ? (createdAt.toDate ? createdAt.toDate() : new Date(createdAt)) : new Date();
+    const end = (sub as any).endDate ? new Date((sub as any).endDate) : new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
     const now = new Date();
     const diff = end.getTime() - now.getTime();
     const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
@@ -120,6 +126,15 @@ export default function SubscriptionsPage() {
     };
   };
 
+  const isSubPaused = (sub: Subscription) => {
+    if (sub.isPaused) return true;
+    if (sub.subscriptionPausedUntil) {
+      const p = new Date(sub.subscriptionPausedUntil).getTime();
+      if (!isNaN(p) && p > Date.now()) return true;
+    }
+    return false;
+  };
+
   const filtered = subscriptions.filter(sub => {
     const s = searchTerm.toLowerCase();
     const matchesSearch = 
@@ -128,8 +143,10 @@ export default function SubscriptionsPage() {
       sub.planName?.toLowerCase().includes(s) ||
       sub.pincode?.includes(s);
     
+    const paused = isSubPaused(sub);
     if (filter === 'pending_allotment') return matchesSearch && sub.allotmentStatus === 'pending';
-    if (filter === 'active') return matchesSearch && sub.status === 'active';
+    if (filter === 'active') return matchesSearch && sub.status === 'active' && !paused;
+    if (filter === 'vacation') return matchesSearch && paused;
     return matchesSearch;
   });
 
@@ -169,6 +186,7 @@ export default function SubscriptionsPage() {
             { id: 'all', label: 'All Cycles' },
             { id: 'pending_allotment', label: 'Needs Partner' },
             { id: 'active', label: 'Flowing' },
+            { id: 'vacation', label: '🏖️ On Vacation' },
           ].map(t => (
             <button 
               key={t.id}
@@ -194,7 +212,7 @@ export default function SubscriptionsPage() {
       ) : (
         <div style={{ display: 'grid', gap: '25px' }}>
           {filtered.map((sub) => {
-            const timeline = getTimeline(sub.createdAt);
+            const timeline = getTimeline(sub);
             const isAllotted = sub.allotmentStatus === 'allotted';
 
             return (
@@ -202,13 +220,18 @@ export default function SubscriptionsPage() {
                 <div style={{ padding: '30px', display: 'flex', gap: '30px' }}>
                     {/* LEFT: Devotee & Plan */}
                     <div style={{ flex: 1.5 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px', flexWrap: 'wrap' }}>
                             <span style={{ fontSize: '0.7rem', padding: '5px 12px', borderRadius: '20px', backgroundColor: 'rgba(212,168,67,0.1)', color: 'var(--primary)', fontWeight: '900', border: '1px solid rgba(212,168,67,0.2)' }}>
                                 {sub.planName?.toUpperCase()}
                             </span>
                             <span style={{ fontSize: '0.7rem', color: sub.status === 'active' ? '#4ADE80' : '#F87171', fontWeight: '900' }}>
                                 ● {sub.status?.toUpperCase()}
                             </span>
+                            {isSubPaused(sub) && (
+                              <span style={{ fontSize: '0.7rem', padding: '5px 12px', borderRadius: '20px', backgroundColor: '#FEF3C7', color: '#92400E', fontWeight: '900', border: '1px solid #FDE68A' }}>
+                                🏖️ ON VACATION (RESUMES {sub.subscriptionPausedUntil ? new Date(sub.subscriptionPausedUntil).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'PAUSED'})
+                              </span>
+                            )}
                         </div>
 
                         <h3 style={{ fontSize: '1.6rem', color: '#0B251C', marginBottom: '15px', fontWeight: '800' }}>{sub.userName}</h3>
