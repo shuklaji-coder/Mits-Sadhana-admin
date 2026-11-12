@@ -37,6 +37,7 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [deletingAll, setDeletingAll] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [search, setSearch] = useState('');
   const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'out'>('all');
@@ -156,6 +157,23 @@ export default function InventoryPage() {
     showToast('🗑️ Product deleted.');
   };
 
+  const handleDeleteAll = async () => {
+    if (!products.length) return;
+    const ok = window.confirm(`⚠️ WARNING: Kya aap sach me saare ${products.length} products database se DELETE karna chahte ho? Yeh action undo nahi hoga.`);
+    if (!ok) return;
+
+    setDeletingAll(true);
+    try {
+      await Promise.all(products.map(p => deleteDoc(doc(db, 'products', p.id))));
+      showToast(`✅ Saare ${products.length} products successfully delete ho gaye!`);
+    } catch (e: any) {
+      console.error('Delete all failed:', e);
+      showToast('❌ Error deleting products: ' + (e.message || 'Error'));
+    } finally {
+      setDeletingAll(false);
+    }
+  };
+
   const filtered = products.filter(p => {
     const matchesSearch =
       (p.name || '').toLowerCase().includes(search.toLowerCase()) ||
@@ -201,23 +219,39 @@ export default function InventoryPage() {
           <h1 style={{ fontSize: '2.2rem', marginBottom: '6px' }}>Inventory & Stock Manager</h1>
           <p style={{ color: 'var(--text-muted)' }}>Real-time stock controls, atomic reservation monitoring, and low-inventory alerts.</p>
         </div>
-        <button
-          onClick={() => setEditingProduct({
-            id: `new_${Date.now()}`,
-            name: '',
-            price: 0,
-            stockQuantity: 50,
-            lowStockThreshold: 5,
-            category: 'FESTIVAL_KIT',
-            image: '',
-            description: '',
-            active: true
-          })}
-          className="btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 22px' }}
-        >
-          <Plus size={16} /> ADD PRODUCT
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          {products.length > 0 && (
+            <button
+              onClick={handleDeleteAll}
+              disabled={deletingAll}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px',
+                borderRadius: '12px', backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid #EF4444', color: '#EF4444', fontWeight: 'bold',
+                cursor: deletingAll ? 'not-allowed' : 'pointer', fontSize: '0.85rem', transition: 'all 0.2s'
+              }}
+            >
+              <Trash2 size={16} /> {deletingAll ? 'DELETING ALL...' : `DELETE ALL (${products.length})`}
+            </button>
+          )}
+          <button
+            onClick={() => setEditingProduct({
+              id: `new_${Date.now()}`,
+              name: '',
+              price: 0,
+              stockQuantity: 50,
+              lowStockThreshold: 5,
+              category: 'FESTIVAL_KIT',
+              image: '',
+              description: '',
+              active: true
+            })}
+            className="btn-primary"
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 22px' }}
+          >
+            <Plus size={16} /> ADD PRODUCT
+          </button>
+        </div>
       </div>
 
       {/* Filter & Search Bar */}
@@ -334,9 +368,27 @@ export default function InventoryPage() {
                     )}
                   </div>
 
-                  <div style={{ marginTop: 'auto' }}>
-                    <button onClick={() => setEditingProduct(item)} className="btn-primary" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <div style={{ marginTop: 'auto', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button onClick={() => setEditingProduct(item)} className="btn-primary" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                       <Edit3 size={14} /> EDIT & RESTOCK
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      title="Delete this product"
+                      style={{
+                        padding: '11px 14px',
+                        borderRadius: '8px',
+                        border: '1px solid #FF6B6B',
+                        backgroundColor: 'rgba(255,107,107,0.12)',
+                        color: '#FF6B6B',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
